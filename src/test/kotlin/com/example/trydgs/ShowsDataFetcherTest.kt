@@ -27,7 +27,7 @@ class ShowsDataFetcherTest : DescribeSpec() {
                 }
             }
         """.trimIndent(), "data.shows[*].title")
-                titles shouldContain "Ozark"
+                titles.shouldContain("Ozark")
             }
         }
     }
