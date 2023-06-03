@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.0"
 	kotlin("jvm") version "1.8.21"
 	kotlin("plugin.spring") version "1.8.21"
+	id("com.netflix.dgs.codegen") version "5.11.1"
 }
 
 group = "com.example"
@@ -33,4 +34,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
+	generateClient = true
+	packageName = "com.example.trydgs.generated"
+	generateClientv2 = true
 }

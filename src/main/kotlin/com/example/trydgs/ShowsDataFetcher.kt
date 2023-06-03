@@ -1,7 +1,9 @@
 package com.example.trydgs
 
+import com.example.trydgs.generated.DgsConstants
+import com.example.trydgs.generated.types.Show
 import com.netflix.graphql.dgs.DgsComponent
-import com.netflix.graphql.dgs.DgsQuery
+import com.netflix.graphql.dgs.DgsData
 import com.netflix.graphql.dgs.InputArgument
 
 @DgsComponent
@@ -13,14 +15,12 @@ class ShowsDataFetcher {
             Show("Dead to Me", 2019),
             Show("Orange is the New Black", 2013))
 
-    @DgsQuery
+    @DgsData(parentType = DgsConstants.QUERY_TYPE, field = DgsConstants.QUERY.Shows)
     fun shows(@InputArgument titleFilter: String?): List<Show> {
         return if (titleFilter != null) {
-            shows.filter { it.title.contains(titleFilter) }
+            shows.filter { it.title?.contains(titleFilter) ?: false }
         } else {
             shows
         }
     }
-
-    data class Show(val title: String, val releaseYear: Int)
 }
