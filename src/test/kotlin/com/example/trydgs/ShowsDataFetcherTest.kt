@@ -2,20 +2,24 @@ package com.example.trydgs
 
 import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
-//import io.kotest.core.spec.style.Test
+import io.kotest.core.extensions.Extension
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldContain
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import org.springframework.test.context.ContextConfiguration
 
-@SpringBootTest(classes = [DgsAutoConfiguration::class, ShowsDataFetcher::class])
-class ShowsDataFetcherTest {
+@ContextConfiguration(classes = [DgsAutoConfiguration::class, ShowsDataFetcher::class])
+class ShowsDataFetcherTest : DescribeSpec() {
+    override fun extensions(): List<Extension> = listOf(SpringExtension)
+
     @Autowired
     lateinit var dgsQueryExecutor: DgsQueryExecutor
 
-    @Test
-    fun shows() {
-        val titles: List<String> = dgsQueryExecutor.executeAndExtractJsonPath("""
+    init {
+        describe("ordinary") {
+            it("success to execute Query") {
+                val titles: List<String> = dgsQueryExecutor.executeAndExtractJsonPath("""
             {
                 shows {
                     title
@@ -23,7 +27,8 @@ class ShowsDataFetcherTest {
                 }
             }
         """.trimIndent(), "data.shows[*].title")
-
-        assertThat(titles).contains("Ozark")
+                titles shouldContain "Ozark"
+            }
+        }
     }
 }
